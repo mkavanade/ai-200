@@ -1,0 +1,19 @@
+# STAGE 1: Build environment
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# POOR: Still copying source code before restoring packages, meaning 
+# NuGet downloads happen every time you change Program.cs
+COPY . .
+RUN dotnet publish Hello.csproj -c Release -o /out
+
+# STAGE 2: Runtime environment
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+
+EXPOSE 8080
+
+# OK: Uses the lightweight ASP.NET runtime image (~200MB)
+COPY --from=build /out .
+
+ENTRYPOINT ["dotnet", "Hello.dll"]

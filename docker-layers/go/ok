@@ -1,0 +1,19 @@
+# STAGE 1: Build environment
+FROM golang:1.21 AS build
+WORKDIR /app
+
+# POOR: Still copying source code before downloading modules, meaning
+# module downloads happen every time you change http-server.go
+COPY . .
+RUN go build -o server http-server.go
+
+# STAGE 2: Runtime environment
+FROM golang:1.21
+WORKDIR /app
+
+EXPOSE 8090
+
+# OK: Still the full SDK image, but at least it's a fresh layer
+COPY --from=build /app/server .
+
+CMD ["./server"]

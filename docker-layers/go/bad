@@ -1,0 +1,13 @@
+FROM golang:1.21
+WORKDIR /app
+
+# BAD: Copies everything at once, breaking the cache on every code change
+COPY . .
+
+# BAD: Downloads modules and builds together
+RUN go build -o server http-server.go
+
+EXPOSE 8090
+
+# BAD: Runs the app inside the ~800MB SDK image, as root
+CMD ["./server"]

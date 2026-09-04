@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+WORKDIR /app
+
+# BAD: Copies everything at once, breaking the cache on every code change
+COPY . .
+
+# BAD: Restores and builds everything together
+RUN dotnet publish Hello.csproj -c Release -o out
+
+# Explicitly expose the .NET 8 default port
+EXPOSE 8080
+
+# BAD: Runs the app inside the 800MB+ SDK image
+CMD ["dotnet", "out/Hello.dll"]
