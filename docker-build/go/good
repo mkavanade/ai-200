@@ -3,13 +3,13 @@ FROM golang:1.21-alpine AS build
 WORKDIR /src
 
 # GOOD: Copy ONLY the module file first
-COPY go.mod ./
+COPY app/go.mod ./
 
 # GOOD: Download dependencies in their own cacheable layer
 RUN go mod download
 
 # GOOD: Now copy the rest of the source code
-COPY . .
+COPY app/ .
 
 # GOOD: Static build using the cached, downloaded modules
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server http-server.go

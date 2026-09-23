@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0
 WORKDIR /app
 
 # BAD: Copies everything at once, breaking the cache on every code change
-COPY . .
+COPY app/ .
 
 # BAD: Restores and builds everything together
 RUN dotnet publish Hello.csproj -c Release -o out

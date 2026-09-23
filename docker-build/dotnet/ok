@@ -4,7 +4,7 @@ WORKDIR /app
 
 # POOR: Still copying source code before restoring packages, meaning 
 # NuGet downloads happen every time you change Program.cs
-COPY . .
+COPY app/ .
 RUN dotnet publish Hello.csproj -c Release -o /out
 
 # STAGE 2: Runtime environment

@@ -3,13 +3,13 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # GOOD: Copy ONLY the project file first
-COPY ["Hello.csproj", "./"]
+COPY ["app/Hello.csproj", "./"]
 
 # GOOD: Restore dependencies in their own cacheable layer
 RUN dotnet restore "Hello.csproj"
 
 # GOOD: Now copy the rest of the source code (Program.cs)
-COPY . .
+COPY app/ .
 
 # GOOD: Publish using the cached restored packages
 RUN dotnet publish "Hello.csproj" -c Release -o /app/publish --no-restore
